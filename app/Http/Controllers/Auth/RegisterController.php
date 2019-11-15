@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Mail\Auth\VerifyMail;
-use App\User;
+use App\Entity\User;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Mail\Auth\VerifyMail;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -18,19 +18,13 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    public function showRegisterForm()
+    public function showRegistrationForm()
     {
         return view('auth.register');
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $this->validate($request,[
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-
         $user = User::create([
             'name' => $request['name'],
             'email' => $request['email'],
@@ -42,7 +36,8 @@ class RegisterController extends Controller
         Mail::to($user->email)->send(new VerifyMail($user));
         event(new Registered($user));
 
-        return $user;
+        return redirect()->route('login')
+            ->with('success', 'Your e-mail is requested.');
     }
 
     public function verify($token)
