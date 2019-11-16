@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Entity\User;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Users\CreateRequest;
+use App\Http\Requests\Admin\Users\UpdateRequest;
+use App\UseCases\Auth\RegisterService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
@@ -11,6 +14,17 @@ use Illuminate\Validation\Rule;
 
 class UsersController extends Controller
 {
+
+    /**
+     * @var RegisterService
+     */
+    private $registerService;
+
+    public function __construct(RegisterService $registerService)
+    {
+        $this->registerService = $registerService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -39,17 +53,9 @@ class UsersController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(CreateRequest $request)
     {
-        $data = $this->validate($request, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-        ]);
-
-        $data['password'] = bcrypt(Str::random());
-        $data['status'] = User::STATUS_ACTIVE;
-
-        $user = User::create($data);
+        $user = User::new($request['name'], $request['email']);
 
         return redirect()->route('admin.users.show', ['id' => $user->id]);
     }
@@ -85,14 +91,9 @@ class UsersController extends Controller
      * @param User $user
      * @return Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateRequest $request, User $user)
     {
-        $data = $this->validate($request, [
-            'name' => 'required|string|max:255',
-            'email' => ['required', 'string', Rule::unique('users', 'email')->ignore($user->id)],
-            'status' => ['required', 'string', Rule::in([User::STATUS_WAIT, User::STATUS_ACTIVE])],
-        ]);
-        $user->update($data);
+        $user->update($request->only(['name', 'email', 'status']));
 
         return redirect()->route('admin.users.show', $user);
     }
@@ -108,5 +109,12 @@ class UsersController extends Controller
         $user->delete();
 
         return redirect()->route('admin.users.index');
+    }
+
+    public function verify(User $user)
+    {
+        $this->registerService->verify($user->id);
+
+        return redirect()->route('admin.users.show', $user);
     }
 }
