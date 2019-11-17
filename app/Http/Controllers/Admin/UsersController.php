@@ -30,11 +30,33 @@ class UsersController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::orderBy('id', 'desc')->paginate(20);
+        $query = User::orderByDesc('id');
 
-        return view('admin.users.index', compact('users'));
+        if (!empty($value = $request->get('id'))) {
+            $query->where('id', $value);
+        }
+
+        if (!empty($value = $request->get('name'))) {
+            $query->where('name', 'like', '%' . $value . '%');
+        }
+        if (!empty($value = $request->get('email'))) {
+            $query->where('email', 'like', '%' . $value . '%');
+        }
+        if (!empty($value = $request->get('status'))) {
+            $query->where('status', $value);
+        }
+        if (!empty($value = $request->get('role'))) {
+            $query->where('role', $value);
+        }
+
+        $users = $query->paginate(20);
+
+        $statuses = User::USER_STATUSES;
+        $roles = User::ROLE_STATUSES;
+
+        return view('admin.users.index', compact('users', 'statuses', 'roles'));
     }
 
     /**
@@ -80,8 +102,9 @@ class UsersController extends Controller
     public function edit(User $user)
     {
         $statuses = User::USER_STATUSES;
+        $roles = User::ROLE_STATUSES;
 
-        return view('admin.users.edit', compact('user', 'statuses'));
+        return view('admin.users.edit', compact('user', 'statuses', 'roles'));
     }
 
     /**
@@ -93,7 +116,11 @@ class UsersController extends Controller
      */
     public function update(UpdateRequest $request, User $user)
     {
-        $user->update($request->only(['name', 'email', 'status']));
+        $user->update($request->only(['name', 'email']));
+
+        if ($request['role'] !== $user->role) {
+            $user->changeRole($request['role']);
+        }
 
         return redirect()->route('admin.users.show', $user);
     }

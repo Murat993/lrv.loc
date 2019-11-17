@@ -21,7 +21,7 @@ Route::get('/cabinet', 'Cabinet\HomeController@index')->name('cabinet');
 
 Route::group(
     [
-        'middleware' => ['auth'],
+        'middleware' => ['auth', 'can:admin-panel'],
         'namespace' => 'Admin',
         'prefix' => 'admin',
         'as' => 'admin.',

@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
 /**
@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
  * @property string $password
  * @property string|null $remember_token
  * @property int $status
- * @property int $role
+ * @property string $role
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
@@ -39,9 +39,17 @@ class User extends Authenticatable
     public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
 
+    public const ROLE_USER = 'user';
+    public const ROLE_ADMIN = 'admin';
+
     const USER_STATUSES = [
         self::STATUS_WAIT => 'Wait',
         self::STATUS_ACTIVE => 'Active',
+    ];
+
+    const ROLE_STATUSES = [
+        User::ROLE_USER => 'User',
+        User::ROLE_ADMIN => 'Admin',
     ];
 
     /**
@@ -50,7 +58,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'status', 'verify_token'
+        'name', 'email', 'password', 'status', 'verify_token', 'role'
     ];
 
     /**
@@ -70,6 +78,7 @@ class User extends Authenticatable
             'password' => bcrypt($password),
             'verify_token' => Str::random(),
             'status' => User::STATUS_WAIT,
+            'role' => User::ROLE_USER,
         ]);
     }
 
@@ -79,7 +88,8 @@ class User extends Authenticatable
             'name' => $name,
             'email' => $email,
             'password' => bcrypt(Str::random()),
-            'status' => User::STATUS_ACTIVE
+            'status' => User::STATUS_ACTIVE,
+            'role' => User::ROLE_USER,
         ]);
     }
 
@@ -93,6 +103,11 @@ class User extends Authenticatable
         return $this->status === self::STATUS_ACTIVE;
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
     public function verify(): void
     {
         if ($this->isActive()) {
@@ -103,5 +118,17 @@ class User extends Authenticatable
             'status' => self::STATUS_ACTIVE,
             'verify_token' => null,
         ]);
+    }
+
+    public function changeRole($role):void
+    {
+        if (!in_array($role, [self::ROLE_ADMIN, self::ROLE_USER], true)) {
+            throw new \InvalidArgumentException('Undefined role "' . $role . '"');
+        }
+        if ($this->role === $role) {
+            throw new \DomainException('Role is already assigned.');
+        }
+
+        $this->update(['role' => $role]);
     }
 }
