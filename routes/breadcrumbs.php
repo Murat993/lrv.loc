@@ -1,5 +1,6 @@
 <?php
 
+use App\Entity\Regions;
 use App\Entity\User;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
@@ -40,6 +41,8 @@ BreadCrumbs::register('admin.home', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->push('Admin', route('admin.home'));
 });
 
+
+// Админка Users
 BreadCrumbs::register('admin.users.index', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->parent('admin.home');
     $crumbs->push('Users', route('admin.users.index'));
@@ -58,5 +61,31 @@ BreadCrumbs::register('admin.users.show', function (BreadcrumbsGenerator $crumbs
 BreadCrumbs::register('admin.users.edit', function (BreadcrumbsGenerator $crumbs, User $user) {
     $crumbs->parent('admin.users.index');
     $crumbs->push('Edit', route('admin.users.edit', $user));
+});
+
+
+// Админка Regions
+BreadCrumbs::register('admin.regions.index', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('admin.home');
+    $crumbs->push('Regions', route('admin.regions.index'));
+});
+
+BreadCrumbs::register('admin.regions.create', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('admin.regions.index');
+    $crumbs->push('Region Create', route('admin.regions.create'));
+});
+
+BreadCrumbs::register('admin.regions.show', function (BreadcrumbsGenerator $crumbs, Regions $regions) {
+    if ($parent = $regions->parent) {
+        $crumbs->parent('admin.regions.show', $parent);
+    } else {
+        $crumbs->parent('admin.regions.index');
+    }
+    $crumbs->push($regions->name, route('admin.regions.show', $regions));
+});
+
+BreadCrumbs::register('admin.regions.edit', function (BreadcrumbsGenerator $crumbs, Regions $regions) {
+    $crumbs->parent('admin.regions.show', $regions);
+    $crumbs->push('Edit', route('admin.regions.edit', $regions));
 });
 

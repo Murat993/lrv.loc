@@ -101,10 +101,9 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-        $statuses = User::USER_STATUSES;
         $roles = User::ROLE_STATUSES;
 
-        return view('admin.users.edit', compact('user', 'statuses', 'roles'));
+        return view('admin.users.edit', compact('user', 'roles'));
     }
 
     /**
