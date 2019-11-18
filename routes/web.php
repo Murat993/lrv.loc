@@ -19,8 +19,7 @@ Route::get('/verify{token}', 'Auth\RegisterController@verify')->name('register.v
 
 Route::get('/cabinet', 'Cabinet\HomeController@index')->name('cabinet');
 
-Route::group(
-    [
+Route::group([
         'middleware' => ['auth', 'can:admin-panel'],
         'namespace' => 'Admin',
         'prefix' => 'admin',
@@ -33,5 +32,17 @@ Route::group(
         Route::post('/users/{user}/verify', 'UsersController@verify')->name('users.verify');
 
         Route::resource('regions', 'RegionController');
+
+        Route::group(['namespace' => 'Adverts','prefix' => 'adverts','as' => 'adverts.'], function () {
+                Route::resource('categories', 'CategoryController');
+
+                Route::group(['prefix' => 'categories/{category}', 'as' => 'categories.'], function () {
+                    Route::post('/first', 'CategoryController@first')->name('first');
+                    Route::post('/up', 'CategoryController@up')->name('up');
+                    Route::post('/down', 'CategoryController@down')->name('down');
+                    Route::post('/last', 'CategoryController@last')->name('last');
+                    Route::resource('attributes', 'AttributeController')->except('index');
+                });
+        });
     });
 
