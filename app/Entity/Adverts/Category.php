@@ -16,6 +16,7 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property int $_rgt
  * @property int|null $parent_id
  * @property Attribute[] $attributes
+ * @property Category[] $parent
  * @property-read Category[] $children
  */
 class Category extends Model
@@ -27,6 +28,16 @@ class Category extends Model
     protected $table = 'advert_categories';
 
     protected $fillable = ['name', 'slug', 'parent_id'];
+
+    public function parentAttributes(): array
+    {
+        return $this->parent ? $this->parent->allAttributes() : [];
+    }
+
+    public function allAttributes(): array
+    {
+        return array_merge($this->parentAttributes(), $this->attributes()->orderBy('sort')->getModels());
+    }
 
     public function attributes()
     {
