@@ -17,15 +17,32 @@ Auth::routes();
 
 Route::get('/verify{token}', 'Auth\RegisterController@verify')->name('register.verify');
 
-Route::get('/cabinet', 'Cabinet\HomeController@index')->name('cabinet');
+Route::group([
+    'middleware' => ['auth'],
+    'namespace' => 'Cabinet',
+    'prefix' => 'cabinet',
+    'as' => 'cabinet.',
+], function () {
+    Route::get('/', 'HomeController@index')->name('home');
+
+    Route::group(['prefix' => 'profile', 'as' => 'profile.',], function () {
+        Route::get('/', 'ProfileController@index')->name('home');
+        Route::get('/edit', 'ProfileController@edit')->name('edit');
+        Route::put('/update', 'ProfileController@update')->name('update');
+        Route::post('/phone', 'PhoneController@request');
+        Route::get('/phone', 'PhoneController@form')->name('phone');
+        Route::put('/phone', 'PhoneController@verify')->name('phone.verify');
+    });
+});
+
+
 
 Route::group([
         'middleware' => ['auth', 'can:admin-panel'],
         'namespace' => 'Admin',
         'prefix' => 'admin',
         'as' => 'admin.',
-    ],
-    function () {
+    ], function () {
         Route::get('/', 'HomeController@index')->name('home');
 
         Route::resource('users', 'UsersController');

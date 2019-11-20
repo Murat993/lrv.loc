@@ -32,9 +32,28 @@ BreadCrumbs::register('password.reset', function (BreadcrumbsGenerator $crumbs) 
 });
 
 // Кабинет
-BreadCrumbs::register('cabinet', function (BreadcrumbsGenerator $crumbs) {
+BreadCrumbs::register('cabinet.home', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->parent('home');
-    $crumbs->push('Cabinet', route('cabinet'));
+    $crumbs->push('Cabinet', route('cabinet.home'));
+});
+
+
+// Кабинет Profile
+Breadcrumbs::register('cabinet.profile.home', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('cabinet.home');
+    $crumbs->push('Profile', route('cabinet.profile.home'));
+});
+
+Breadcrumbs::register('cabinet.profile.edit', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('cabinet.profile.home');
+    $crumbs->push('Edit', route('cabinet.profile.edit'));
+});
+
+
+// Кабинет Profile Phone
+Breadcrumbs::register('cabinet.profile.phone', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('cabinet.profile.home');
+    $crumbs->push('Profile', route('cabinet.profile.phone'));
 });
 
 
