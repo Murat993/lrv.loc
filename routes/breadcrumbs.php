@@ -16,6 +16,10 @@ BreadCrumbs::register('login', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->push('Login', route('login'));
 });
 
+BreadCrumbs::register('login.phone', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->push('Login', route('login.phone'));
+});
+
 BreadCrumbs::register('register', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->parent('login');
     $crumbs->push('Register', route('register'));
@@ -54,6 +58,13 @@ Breadcrumbs::register('cabinet.profile.edit', function (BreadcrumbsGenerator $cr
 Breadcrumbs::register('cabinet.profile.phone', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->parent('cabinet.profile.home');
     $crumbs->push('Profile', route('cabinet.profile.phone'));
+});
+
+
+// Кабинет Advert
+Breadcrumbs::register('cabinet.adverts.index', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('cabinet.home');
+    $crumbs->push('Adverts', route('cabinet.adverts.index'));
 });
 
 

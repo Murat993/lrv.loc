@@ -22,6 +22,7 @@ use Illuminate\Support\Str;
  * @property Carbon $phone_verify_token_expire
  * @property string $phone
  * @property bool $phone_verified
+ * @property bool $phone_auth
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
@@ -64,11 +65,13 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'status', 'verify_token', 'role', 'last_name', 'phone',
+        'name', 'email', 'password', 'status', 'verify_token',
+        'role', 'last_name', 'phone', 'phone_auth'
     ];
 
     protected $casts = [
         'phone_verified' => 'boolean',
+        'phone_auth' => 'boolean',
         'phone_verify_token_expire' => 'datetime',
     ];
 
@@ -124,6 +127,11 @@ class User extends Authenticatable
         return $this->phone_verified;
     }
 
+    public function hasFilledProfile(): bool
+    {
+        return !empty($this->name) && !empty($this->last_name) && $this->isPhoneVerified();
+    }
+
     public function verify(): void
     {
         if ($this->isActive()) {
@@ -153,6 +161,7 @@ class User extends Authenticatable
         $this->phone_verified = false;
         $this->phone_verify_token = null;
         $this->phone_verify_token_expire = null;
+        $this->phone_auth = false;
 
         $this->saveOrFail();
     }
@@ -189,6 +198,26 @@ class User extends Authenticatable
         $this->phone_verify_token = null;
         $this->phone_verify_token_expire = null;
 
+        $this->saveOrFail();
+    }
+
+    public function isPhoneAuthEnabled(): bool
+    {
+        return (bool)$this->phone_auth;
+    }
+
+    public function disablePhoneAuth(): void
+    {
+        $this->phone_auth = false;
+        $this->saveOrFail();
+    }
+
+    public function enablePhoneAuth(): void
+    {
+        if (!empty($this->phone) && !$this->isPhoneVerified()) {
+            throw new \DomainException('Phone number is empty.');
+        }
+        $this->phone_auth = true;
         $this->saveOrFail();
     }
 }

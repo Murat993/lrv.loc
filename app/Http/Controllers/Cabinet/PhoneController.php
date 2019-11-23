@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Cabinet;
 
 
 use App\Http\Controllers\Controller;
+use App\Services\Sms\SmsSender;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,6 +55,19 @@ class PhoneController extends Controller
             $user->verifyPhone($request['token'], Carbon::now());
         } catch (\DomainException $e) {
             return redirect()->route('cabinet.profile.phone')->with('error', $e->getMessage());
+        }
+
+        return redirect()->route('cabinet.profile.home');
+    }
+
+    public function auth()
+    {
+        $user = Auth::user();
+
+        if ($user->isPhoneAuthEnabled()) {
+            $user->disablePhoneAuth();
+        } else {
+            $user->enablePhoneAuth();
         }
 
         return redirect()->route('cabinet.profile.home');
