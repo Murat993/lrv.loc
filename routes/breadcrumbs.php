@@ -1,5 +1,6 @@
 <?php
 
+use App\Entity\Adverts\Advert\Advert;
 use App\Entity\Adverts\Attribute;
 use App\Entity\Adverts\Category;
 use App\Entity\Regions;
@@ -35,6 +36,41 @@ BreadCrumbs::register('password.reset', function (BreadcrumbsGenerator $crumbs) 
     $crumbs->push('Password Reset', route('password.reset'));
 });
 
+
+// ROOT Adverts
+Breadcrumbs::register('adverts.inner_region', function (BreadcrumbsGenerator $crumbs, Regions $region = null, Category $category = null) {
+    if ($region && $parent = $region->parent) {
+        $crumbs->parent('adverts.inner_region', $parent, $category);
+    } else {
+        $crumbs->parent('home');
+        $crumbs->push('Adverts', route('adverts.index'));
+    }
+    if ($region) {
+        $crumbs->push($region->name, route('adverts.index', $region, $category));
+    }
+});
+
+Breadcrumbs::register('adverts.inner_category', function (BreadcrumbsGenerator $crumbs, Regions $region = null, Category $category = null) {
+    if ($category && $parent = $category->parent) {
+        $crumbs->parent('adverts.inner_category', $region, $parent);
+    } else {
+        $crumbs->parent('adverts.inner_region', $region, $category);
+    }
+    if ($category) {
+        $crumbs->push($category->name, route('adverts.index', $region, $category));
+    }
+});
+
+Breadcrumbs::register('adverts.index', function (BreadcrumbsGenerator $crumbs, Regions $region = null, Category $category = null) {
+    $crumbs->parent('adverts.inner_category', $region, $category);
+});
+
+Breadcrumbs::register('adverts.show', function (BreadcrumbsGenerator $crumbs, Advert $advert) {
+    $crumbs->parent('adverts.index', $advert->region, $advert->category);
+    $crumbs->push($advert->title, route('adverts.show', $advert));
+});
+
+
 // Кабинет
 BreadCrumbs::register('cabinet.home', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->parent('home');
@@ -65,6 +101,21 @@ Breadcrumbs::register('cabinet.profile.phone', function (BreadcrumbsGenerator $c
 Breadcrumbs::register('cabinet.adverts.index', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->parent('cabinet.home');
     $crumbs->push('Adverts', route('cabinet.adverts.index'));
+});
+
+Breadcrumbs::register('cabinet.adverts.create', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('adverts.index');
+    $crumbs->push('Create', route('cabinet.adverts.create'));
+});
+
+Breadcrumbs::register('cabinet.adverts.create.region', function (BreadcrumbsGenerator $crumbs, Category $category, Regions $region = null) {
+    $crumbs->parent('cabinet.adverts.create');
+    $crumbs->push($category->name, route('cabinet.adverts.create.region', [$category, $region]));
+});
+
+Breadcrumbs::register('cabinet.adverts.create.advert', function (BreadcrumbsGenerator $crumbs, Category $category, Regions $region = null) {
+    $crumbs->parent('cabinet.adverts.create.region', $category, $region);
+    $crumbs->push($region ? $region->name : 'All', route('cabinet.adverts.create.advert', [$category, $region]));
 });
 
 
@@ -119,6 +170,23 @@ BreadCrumbs::register('admin.regions.show', function (BreadcrumbsGenerator $crum
 BreadCrumbs::register('admin.regions.edit', function (BreadcrumbsGenerator $crumbs, Regions $regions) {
     $crumbs->parent('admin.regions.show', $regions);
     $crumbs->push('Edit', route('admin.regions.edit', $regions));
+});
+
+
+// Админка Adverts/Advert
+Breadcrumbs::register('admin.adverts.adverts.index', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('admin.home');
+    $crumbs->push('Categories', route('admin.adverts.adverts.index'));
+});
+
+Breadcrumbs::register('admin.adverts.adverts.edit', function (BreadcrumbsGenerator $crumbs, Advert $advert) {
+    $crumbs->parent('admin.home');
+    $crumbs->push($advert->title, route('admin.adverts.adverts.edit', $advert));
+});
+
+Breadcrumbs::register('admin.adverts.adverts.reject', function (BreadcrumbsGenerator $crumbs, Advert $advert) {
+    $crumbs->parent('admin.home');
+    $crumbs->push($advert->title, route('admin.adverts.adverts.reject', $advert));
 });
 
 

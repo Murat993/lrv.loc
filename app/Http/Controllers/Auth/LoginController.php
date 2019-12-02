@@ -107,6 +107,12 @@ class LoginController extends Controller
         throw ValidationException::withMessages(['token' => ['Invalid auth token.']]);
     }
 
+    public function logout(Request $request)
+    {
+        Auth::guard()->logout();
+        $request->session()->invalidate();
+        return redirect()->route('home');
+    }
 
     protected function username()
     {

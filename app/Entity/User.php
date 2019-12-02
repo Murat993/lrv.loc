@@ -48,6 +48,7 @@ class User extends Authenticatable
 
     public const ROLE_USER = 'user';
     public const ROLE_ADMIN = 'admin';
+    public const ROLE_MODERATOR = 'moderator';
 
     const USER_STATUSES = [
         self::STATUS_WAIT => 'Wait',
@@ -57,6 +58,7 @@ class User extends Authenticatable
     const ROLE_STATUSES = [
         User::ROLE_USER => 'User',
         User::ROLE_ADMIN => 'Admin',
+        User::ROLE_MODERATOR => 'Moderator',
     ];
 
     /**
@@ -122,6 +124,11 @@ class User extends Authenticatable
         return $this->role === self::ROLE_ADMIN;
     }
 
+    public function isModerator(): bool
+    {
+        return $this->role === self::ROLE_MODERATOR;
+    }
+
     public function isPhoneVerified(): bool
     {
         return $this->phone_verified;
@@ -146,7 +153,7 @@ class User extends Authenticatable
 
     public function changeRole($role):void
     {
-        if (!in_array($role, [self::ROLE_ADMIN, self::ROLE_USER], true)) {
+        if (!in_array($role, self::ROLE_STATUSES)) {
             throw new \InvalidArgumentException('Undefined role "' . $role . '"');
         }
         if ($this->role === $role) {
