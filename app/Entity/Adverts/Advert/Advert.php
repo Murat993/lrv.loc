@@ -194,6 +194,15 @@ class Advert extends Model
         }
         return $query->whereIn('region_id', $ids);
     }
-
+//
+//    public function getRouteKey(): string
+//    {
+//        return $this->id . '-' . $this->slug;
+//    }
+//
+//    public function getRouteKeyName(): string
+//    {
+//        return 'slug';
+//    }
 
 }
