@@ -67,6 +67,7 @@ class AdvertService
                 ]);
             }
         });
+        $advert->update();
     }
 
     public function edit($id, EditRequest $request): void
@@ -114,6 +115,8 @@ class AdvertService
                 }
             }
         });
+
+        $advert->update();
     }
 
     public function expire(Advert $advert): void

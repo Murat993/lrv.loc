@@ -121,6 +121,13 @@ Breadcrumbs::register('cabinet.adverts.create.advert', function (BreadcrumbsGene
 });
 
 
+// Favorites
+Breadcrumbs::register('cabinet.favorites.index', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('cabinet.home');
+    $crumbs->push('Adverts', route('cabinet.favorites.index'));
+});
+
+
 // Админка
 BreadCrumbs::register('admin.home', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->push('Admin', route('admin.home'));

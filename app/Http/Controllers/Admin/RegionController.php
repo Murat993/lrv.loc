@@ -1,11 +1,19 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
+
 use App\Entity\Regions;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 class RegionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:manage-regions');
+    }
+
     public function index()
     {
         $regions = Regions::where('parent_id', null)->orderBy('name')->get();
@@ -66,6 +74,7 @@ class RegionController extends Controller
 
         return redirect()->route('admin.regions.show', $region);
     }
+
     public function destroy(Regions $region)
     {
         $region->delete();

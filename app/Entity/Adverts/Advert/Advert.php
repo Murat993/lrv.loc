@@ -34,7 +34,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $published_at
  * @property Carbon $expires_at
  * @property Photo[] $photos
- * @method Advert forUser($value)
+ * @method Advert forUser(User $user)
+ * @method Advert favoredByUser(User $user)
  * @method Advert active()
  * @mixin \Eloquent
  */
@@ -167,6 +168,12 @@ class Advert extends Model
         return $this->hasMany(Photo::class, 'advert_id', 'id');
     }
 
+    public function favorites()
+    {
+        return $this->belongsToMany(User::class, 'advert_favorites', 'advert_id', 'user_id');
+    }
+
+
     public function scopeActive(Builder $query)
     {
         return $query->where('status', self::STATUS_ACTIVE);
@@ -193,6 +200,13 @@ class Advert extends Model
             $ids = array_merge($ids, $childrenIds);
         }
         return $query->whereIn('region_id', $ids);
+    }
+
+    public function scopeFavoredByUser(Builder $query, User $user)
+    {
+        return $query->whereHas('favorites', function(Builder $query) use ($user) {
+            $query->where('user_id', $user->id);
+        });
     }
 //
 //    public function getRouteKey(): string

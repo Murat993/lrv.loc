@@ -23,6 +23,7 @@ class UsersController extends Controller
     public function __construct(RegisterService $registerService)
     {
         $this->registerService = $registerService;
+        $this->middleware('can:manage-users');
     }
 
     /**
