@@ -21,6 +21,7 @@
     <link href="{{ mix('css/app.css', 'build') }}" rel="stylesheet">
 </head>
 <body id="app">
+    <header>
         <nav class="navbar navbar-expand-md navbar-dark">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -71,6 +72,10 @@
                 </div>
             </div>
         </nav>
+        @section('search')
+            @include('layouts.partials.search', ['category' => null, 'route' => route('adverts.index')])
+        @show
+    </header>
 
         <main class="app-content py-3">
             <div class="container">
