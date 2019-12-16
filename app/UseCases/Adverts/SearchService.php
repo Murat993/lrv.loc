@@ -28,7 +28,7 @@ class SearchService
         });
 
         $response = $this->client->search([
-            'index' => 'app', // название базы
+            'index' => 'adverts', // название базы
             'type' => 'advert', // название типа
             'body' => [
                 '_source' => ['id'], // возвращает только айдишники (типо select)
@@ -87,7 +87,7 @@ class SearchService
         ]);
 
         $ids = array_column($response['hits']['hits'], '_id');
-        if (!$ids) {
+        if (!empty($ids)) {
             $items = Advert::active()
                 ->with(['category', 'region'])
                 ->whereIn('id', $ids)
@@ -95,7 +95,6 @@ class SearchService
                 ->get();
             $pagination = new LengthAwarePaginator($items, $response['hits']['total'], $perPage, $page);
         } else {
-            dd('asdas');
             $pagination = new LengthAwarePaginator([], 0, $perPage, $page);
         }
 

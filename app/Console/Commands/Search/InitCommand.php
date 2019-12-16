@@ -20,14 +20,21 @@ class InitCommand extends Command
 
     public function handle(): bool
     {
+        $this->initAdverts();
+        $this->initBanners();
+        return true;
+    }
+
+    public function initAdverts(): bool
+    {
         try {
             $this->client->indices()->delete([
-                'index' => 'app'
+                'index' => 'adverts'
             ]);
         } catch (Missing404Exception $e) {}
 
         $this->client->indices()->create([
-            'index' => 'app', // назване базы
+            'index' => 'adverts', // назване базы
             'body' => [
                 'mappings' => [ // настройка описания каждого поля
                     'advert' => [ // название типа в данном случае advert
@@ -124,5 +131,44 @@ class InitCommand extends Command
             ],
         ]);
         return true;
+    }
+
+    private function initBanners(): void
+    {
+        try {
+            $this->client->indices()->delete([
+                'index' => 'banners'
+            ]);
+        } catch (Missing404Exception $e) {
+        }
+        $this->client->indices()->create([
+            'index' => 'banners',
+            'body' => [
+                'mappings' => [
+                    'banner' => [
+                        '_source' => [
+                            'enabled' => true,
+                        ],
+                        'properties' => [
+                            'id' => [
+                                'type' => 'integer',
+                            ],
+                            'status' => [
+                                'type' => 'keyword',
+                            ],
+                            'format' => [
+                                'type' => 'keyword',
+                            ],
+                            'categories' => [
+                                'type' => 'integer',
+                            ],
+                            'regions' => [
+                                'type' => 'integer',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
     }
 }
