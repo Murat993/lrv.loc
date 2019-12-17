@@ -32,7 +32,20 @@ class ProfileController extends Controller
      */
     public function show(Request $request)
     {
-        return new ProfileResource($request->user());
+        /** @var User $user */
+        $user = $request->user();
+        return [
+            'id' => $user->id,
+            'email' => $user->email,
+            'phone' => [
+                'number' => $user->phone,
+                'verified' => $user->phone_verified,
+            ],
+            'name' => [
+                'first' => $user->name,
+                'last' => $user->last_name,
+            ],
+        ];
     }
 
     /**
@@ -50,8 +63,18 @@ class ProfileController extends Controller
     public function update(ProfileRequest $request)
     {
         $this->service->edit($request->user()->id, $request);
-
         $user = User::findOrFail($request->user()->id);
-        return new ProfileResource($user);
+        return [
+            'id' => $user->id,
+            'email' => $user->email,
+            'phone' => [
+                'number' => $user->phone,
+                'verified' => $user->phone_verified,
+            ],
+            'name' => [
+                'first' => $user->name,
+                'last' => $user->last_name,
+            ],
+        ];
     }
 }
