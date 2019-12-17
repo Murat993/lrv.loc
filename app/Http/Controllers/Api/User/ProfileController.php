@@ -5,17 +5,19 @@ namespace App\Http\Controllers\Api\User;
 use App\Entity\User\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cabinet\ProfileRequest;
-use App\Http\Resources\User\ProfileResource;
+use App\Http\Serializers\UserSerializer;
 use App\UseCases\Profile\ProfileService;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
     private $service;
+    private $serializer;
 
-    public function __construct(ProfileService $service)
+    public function __construct(ProfileService $service, UserSerializer $serializer)
     {
         $this->service = $service;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -34,25 +36,14 @@ class ProfileController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
-        return [
-            'id' => $user->id,
-            'email' => $user->email,
-            'phone' => [
-                'number' => $user->phone,
-                'verified' => $user->phone_verified,
-            ],
-            'name' => [
-                'first' => $user->name,
-                'last' => $user->last_name,
-            ],
-        ];
+        return $this->serializer->profile($user);
     }
 
     /**
      * @SWG\Put(
      *     path="/user",
      *     tags={"Profile"},
-     *     @SWG\Parameter(name="body", in="body", required=true, @SWG\Schema(ref="#/definitions/ProfileEditRequest")),
+     *     @SWG\Parameter(name="body", in="body", required=true, @SWG\Schema(ref="#/definitions/ProfileRequest")),
      *     @SWG\Response(
      *         response=200,
      *         description="Success response",
@@ -64,17 +55,6 @@ class ProfileController extends Controller
     {
         $this->service->edit($request->user()->id, $request);
         $user = User::findOrFail($request->user()->id);
-        return [
-            'id' => $user->id,
-            'email' => $user->email,
-            'phone' => [
-                'number' => $user->phone,
-                'verified' => $user->phone_verified,
-            ],
-            'name' => [
-                'first' => $user->name,
-                'last' => $user->last_name,
-            ],
-        ];
+        return $this->serializer->profile($user);
     }
 }
