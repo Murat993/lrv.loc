@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Services\Sms\ArraySender;
 use App\Services\Sms\Smsc;
 use App\Services\Sms\SmsSender;

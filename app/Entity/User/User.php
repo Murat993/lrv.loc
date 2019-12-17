@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
 use App\Entity\Adverts\Advert\Advert;
 use Carbon\Carbon;
@@ -22,7 +22,7 @@ use Illuminate\Support\Str;
  * @property string $phone_verify_token
  * @property Carbon $phone_verify_token_expire
  * @property string $phone
- * @property bool $phone_verified
+ * @property bool $phone_verifieduse App\Entity\User\User;
  * @property bool $phone_auth
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at

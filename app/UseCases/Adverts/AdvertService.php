@@ -6,7 +6,7 @@ namespace App\UseCases\Adverts;
 use App\Entity\Adverts\Advert\Advert;
 use App\Entity\Adverts\Category;
 use App\Entity\Regions;
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Http\Requests\Adverts\AttributesRequest;
 use App\Http\Requests\Adverts\CreateRequest;
 use App\Http\Requests\Adverts\EditRequest;
