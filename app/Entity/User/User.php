@@ -4,6 +4,7 @@ namespace App\Entity\User;
 
 use App\Entity\Adverts\Advert\Advert;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -26,18 +27,9 @@ use Illuminate\Support\Str;
  * @property bool $phone_auth
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property Network[] networks
+ * @method Builder byNetwork(string $network, string $identity)
  * @property-read int|null $notifications_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Entity\User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Entity\UsernewQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Entity\Userquery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Entity\UserwhereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Entity\UserwhereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Entity\UserwhereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Entity\UserwhereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Entity\UserwherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Entity\UserwhereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Entity\UserwhereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -86,6 +78,23 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public static function registerByNetwork(string $network, string $identity): self
+    {
+        $user = static::create([
+            'name' => $identity,
+            'email' => null,
+            'password' => null,
+            'verify_token' => null,
+            'role' => self::ROLE_USER,
+            'status' => self::STATUS_ACTIVE,
+        ]);
+        $user->networks()->create([
+            'network' => $network,
+            'identity' => $identity,
+        ]);
+        return $user;
+    }
 
     public static function register(string $name, string $email, string $password): self
     {
@@ -250,5 +259,17 @@ class User extends Authenticatable
     public function favorites()
     {
         return $this->belongsToMany(Advert::class, 'advert_favorites', 'user_id', 'advert_id');
+    }
+
+    public function networks()
+    {
+        return $this->hasMany(Network::class, 'user_id', 'id');
+    }
+
+    public function scopeByNetwork(Builder $query, string $network, string $identity): Builder
+    {
+        return $query->whereHas('networks', function(Builder $query) use ($network, $identity) {
+            $query->where('network', $network)->where('identity', $identity);
+        });
     }
 }

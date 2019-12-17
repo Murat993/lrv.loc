@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Category $category
  *
  * @method Builder active()
- * @method Builder forUser(\App\Entity\User $user)
+ * @method Builder forUser(\App\Entity\User\User $user)
  * @mixin \Eloquent
  *
  */

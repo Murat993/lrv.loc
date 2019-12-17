@@ -23,6 +23,9 @@ Route::get('/verify{token}', 'Auth\RegisterController@verify')->name('register.v
 Route::get('/banner/get', 'BannerController@get')->name('banner.get');
 Route::get('/banner/{banner}/click', 'BannerController@click')->name('banner.click');
 
+Route::get('/login/{network}', 'Auth\NetworkController@redirect')->name('login.network');
+Route::get('/login/{network}/callback', 'Auth\NetworkController@callback');
+
 Route::get('/ajax/regions', 'Ajax\RegionController@get')->name('ajax.regions');
 
 Route::group([
