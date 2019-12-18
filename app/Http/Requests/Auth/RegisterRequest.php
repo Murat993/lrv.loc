@@ -17,9 +17,14 @@ class RegisterRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
+     * @SWG\Definition(
+     *     definition="RegisterRequest",
+     *     type="object",
+     *     @SWG\Property(property="name", type="string"),
+     *     @SWG\Property(property="email", type="string"),
+     *     @SWG\Property(property="password", type="string"),
+     *     @SWG\Property(property="password_confirmation", type="string"),
+     * )
      */
     public function rules()
     {

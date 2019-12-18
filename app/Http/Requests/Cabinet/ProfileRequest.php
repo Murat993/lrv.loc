@@ -17,9 +17,13 @@ class ProfileRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
+     * @SWG\Definition(
+     *     definition="ProfileEditRequest",
+     *     type="object",
+     *     @SWG\Property(property="name", type="string"),
+     *     @SWG\Property(property="last_name", type="string"),
+     *     @SWG\Property(property="phone", type="string"),
+     * )
      */
     public function rules()
     {
