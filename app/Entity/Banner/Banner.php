@@ -89,7 +89,7 @@ class Banner extends Model
     public function sendToModeration(): void
     {
         if (!$this->isDraft()) {
-            throw new \DomainException('Advert is not draft.');
+            throw new \DomainException('Adverts is not draft.');
         }
         $this->update([
             'status' => self::STATUS_MODERATION,
@@ -99,7 +99,7 @@ class Banner extends Model
     public function cancelModeration(): void
     {
         if (!$this->isOnModeration()) {
-            throw new \DomainException('Advert is not sent to moderation.');
+            throw new \DomainException('Adverts is not sent to moderation.');
         }
         $this->update([
             'status' => self::STATUS_DRAFT,
@@ -109,7 +109,7 @@ class Banner extends Model
     public function moderate(): void
     {
         if (!$this->isOnModeration()) {
-            throw new \DomainException('Advert is not sent to moderation.');
+            throw new \DomainException('Adverts is not sent to moderation.');
         }
         $this->update([
             'status' => self::STATUS_MODERATED,
@@ -127,7 +127,7 @@ class Banner extends Model
     public function order(int $cost): void
     {
         if (!$this->isModerated()) {
-            throw new \DomainException('Advert is not moderated.');
+            throw new \DomainException('Adverts is not moderated.');
         }
         $this->update([
             'cost' => $cost,
@@ -138,7 +138,7 @@ class Banner extends Model
     public function pay(Carbon $date): void
     {
         if (!$this->isOrdered()) {
-            throw new \DomainException('Advert is not ordered.');
+            throw new \DomainException('Adverts is not ordered.');
         }
         $this->update([
             'published_at' => $date,

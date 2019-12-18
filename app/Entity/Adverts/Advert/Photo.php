@@ -7,7 +7,7 @@ namespace App\Entity\Adverts\Advert;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Entity\Adverts\Advert\Value
+ * App\Entity\Adverts\Adverts\Value
  * @property int id
  * @property int advert_id
  * @property string file

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Entity\Adverts\Advert
+ * App\Entity\Adverts\Adverts
  *
  * @property int $id
  * @property int $category_id
@@ -69,7 +69,7 @@ class Advert extends Model
     public function sendToModeration(): void
     {
         if (!$this->isDraft()) {
-            throw new \DomainException('Advert is not draft.');
+            throw new \DomainException('Adverts is not draft.');
         }
         if (!\count($this->photos)) {
             throw new \DomainException('Upload photos.');
@@ -82,7 +82,7 @@ class Advert extends Model
     public function moderate(Carbon $date): void
     {
         if (!$this->isOnModeration()) {
-            throw new \DomainException('Advert is not sent to moderation.');
+            throw new \DomainException('Adverts is not sent to moderation.');
         }
         $this->update([
             'published_at' => $date,

@@ -5,19 +5,17 @@ namespace App\Http\Controllers\Api\User;
 use App\Entity\User\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cabinet\ProfileRequest;
-use App\Http\Serializers\UserSerializer;
+use App\Http\Resources\User\ProfileResource;
 use App\UseCases\Profile\ProfileService;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
     private $service;
-    private $serializer;
 
-    public function __construct(ProfileService $service, UserSerializer $serializer)
+    public function __construct(ProfileService $service)
     {
         $this->service = $service;
-        $this->serializer = $serializer;
     }
 
     /**
@@ -34,9 +32,7 @@ class ProfileController extends Controller
      */
     public function show(Request $request)
     {
-        /** @var User $user */
-        $user = $request->user();
-        return $this->serializer->profile($user);
+        return new ProfileResource($request->user());
     }
 
     /**
@@ -55,6 +51,6 @@ class ProfileController extends Controller
     {
         $this->service->edit($request->user()->id, $request);
         $user = User::findOrFail($request->user()->id);
-        return $this->serializer->profile($user);
+        return new ProfileResource($user);
     }
 }

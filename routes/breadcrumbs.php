@@ -100,7 +100,7 @@ Breadcrumbs::register('cabinet.profile.phone', function (BreadcrumbsGenerator $c
 });
 
 
-// Кабинет Advert
+// Кабинет Adverts
 Breadcrumbs::register('cabinet.adverts.index', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->parent('cabinet.home');
     $crumbs->push('Adverts', route('cabinet.adverts.index'));
@@ -214,7 +214,7 @@ BreadCrumbs::register('admin.regions.edit', function (BreadcrumbsGenerator $crum
 });
 
 
-// Админка Adverts/Advert
+// Админка Adverts/Adverts
 Breadcrumbs::register('admin.adverts.adverts.index', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->parent('admin.home');
     $crumbs->push('Categories', route('admin.adverts.adverts.index'));

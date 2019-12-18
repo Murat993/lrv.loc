@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Entity\Adverts\Advert\Value
+ * App\Entity\Adverts\Adverts\Value
  * @property int advert_id
  * @property int attribute_id
  * @property string value
