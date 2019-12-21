@@ -15,5 +15,5 @@
         </ul>
     @endif
 
-{{--    {!! clean($page->content) !!}--}}
+    {!! clean($page->content) !!}
 @endsection

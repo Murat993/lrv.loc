@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.6.39 on 2019-12-17 06:32:39.
+ * Generated for Laravel 5.6.39 on 2019-12-21 08:51:56.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -1758,7 +1758,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the currently authenticated user.
          *
-         * @return \App\Entity\User|null 
+         * @return \App\Entity\User\User|null 
          * @static 
          */ 
         public static function user()
@@ -1796,7 +1796,7 @@ namespace Illuminate\Support\Facades {
          * Log the given user ID into the application without sessions or cookies.
          *
          * @param mixed $id
-         * @return \App\Entity\User|false 
+         * @return \App\Entity\User\User|false 
          * @static 
          */ 
         public static function onceUsingId($id)
@@ -1865,7 +1865,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param mixed $id
          * @param bool $remember
-         * @return \App\Entity\User|false 
+         * @return \App\Entity\User\User|false 
          * @static 
          */ 
         public static function loginUsingId($id, $remember = false)
@@ -1932,7 +1932,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the last user we attempted to authenticate.
          *
-         * @return \App\Entity\User 
+         * @return \App\Entity\User\User 
          * @static 
          */ 
         public static function getLastAttempted()
@@ -2043,7 +2043,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Return the currently cached user.
          *
-         * @return \App\Entity\User|null 
+         * @return \App\Entity\User\User|null 
          * @static 
          */ 
         public static function getUser()
@@ -2093,7 +2093,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Determine if the current user is authenticated.
          *
-         * @return \App\Entity\User 
+         * @return \App\Entity\User\User 
          * @throws \Illuminate\Auth\AuthenticationException
          * @static 
          */ 
@@ -15124,6 +15124,45 @@ namespace Laravel\Socialite\Facades {
  
 }
 
+namespace Mews\Purifier\Facades { 
+
+    /**
+     * 
+     *
+     * @see \Mews\Purifier
+     */ 
+    class Purifier {
+        
+        /**
+         * 
+         *
+         * @param $dirty
+         * @param null $config
+         * @return mixed 
+         * @static 
+         */ 
+        public static function clean($dirty, $config = null)
+        {
+                        /** @var \Mews\Purifier\Purifier $instance */
+                        return $instance->clean($dirty, $config);
+        }
+        
+        /**
+         * Get HTMLPurifier instance.
+         *
+         * @return \HTMLPurifier 
+         * @static 
+         */ 
+        public static function getInstance()
+        {
+                        /** @var \Mews\Purifier\Purifier $instance */
+                        return $instance->getInstance();
+        }
+         
+    }
+ 
+}
+
 
 namespace  { 
 
@@ -17647,6 +17686,8 @@ namespace  {
     class Breadcrumbs extends \DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs {}
 
     class Socialite extends \Laravel\Socialite\Facades\Socialite {}
+
+    class Purifier extends \Mews\Purifier\Facades\Purifier {}
  
 }
 
