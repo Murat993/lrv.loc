@@ -4,9 +4,11 @@ use App\Entity\Adverts\Advert\Advert;
 use App\Entity\Adverts\Attribute;
 use App\Entity\Adverts\Category;
 use App\Entity\Banner\Banner;
+use App\Entity\Page;
 use App\Entity\Regions;
 use App\Entity\User\User;
 use App\Http\Router\AdvertsPath;
+use App\Http\Router\PagePath;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 
@@ -36,6 +38,16 @@ BreadCrumbs::register('password.request', function (BreadcrumbsGenerator $crumbs
 BreadCrumbs::register('password.reset', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->parent('password.request');
     $crumbs->push('Password Reset', route('password.reset'));
+});
+
+// ROOT Page рекурсивный кастомный путь
+Breadcrumbs::register('page', function (BreadcrumbsGenerator $crumbs, PagePath $path) {
+    if ($parent = $path->page->parent) {
+        $crumbs->parent('page', $path->withPage($path->page->parent));
+    } else {
+        $crumbs->parent('home');
+    }
+    $crumbs->push($path->page->title, route('page', $path));
 });
 
 
@@ -294,4 +306,28 @@ Breadcrumbs::register('admin.banners.reject', function (BreadcrumbsGenerator $cr
 });
 
 
+// Админка Pages
+Breadcrumbs::register('admin.pages.index', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('admin.home');
+    $crumbs->push('Pages', route('admin.pages.index'));
+});
+
+Breadcrumbs::register('admin.pages.create', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('admin.pages.index');
+    $crumbs->push('Create', route('admin.pages.create'));
+});
+
+Breadcrumbs::register('admin.pages.show', function (BreadcrumbsGenerator $crumbs, Page $page) {
+    if ($parent = $page->parent) {
+        $crumbs->parent('admin.pages.show', $parent);
+    } else {
+        $crumbs->parent('admin.pages.index');
+    }
+    $crumbs->push($page->title, route('admin.pages.show', $page));
+});
+
+Breadcrumbs::register('admin.pages.edit', function (BreadcrumbsGenerator $crumbs, Page $page) {
+    $crumbs->parent('admin.pages.show', $page);
+    $crumbs->push('Edit', route('admin.pages.edit', $page));
+});
 

@@ -125,6 +125,15 @@ Route::group([
 
         Route::resource('regions', 'RegionController');
 
+        Route::resource('pages', 'PageController');
+
+        Route::group(['prefix' => 'pages/{page}', 'as' => 'pages.'], function () {
+            Route::post('/first', 'PageController@first')->name('first');
+            Route::post('/up', 'PageController@up')->name('up');
+            Route::post('/down', 'PageController@down')->name('down');
+            Route::post('/last', 'PageController@last')->name('last');
+        });
+
         Route::group(['namespace' => 'Adverts','prefix' => 'adverts','as' => 'adverts.'], function () {
                 Route::resource('categories', 'CategoryController');
 
@@ -165,3 +174,4 @@ Route::group([
 
     });
 
+Route::get('/{page_path}', 'PageController@show')->name('page')->where('page_path', '.+');

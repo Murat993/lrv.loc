@@ -9,6 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
+    @yield('meta')
 
     <!-- Scripts -->
     <script src="{{ mix('js/app.js', 'build') }}" defer></script>
@@ -92,6 +93,6 @@
                 </div>
             </div>
         </footer>
-
+    @yield('scripts')
 </body>
 </html>
