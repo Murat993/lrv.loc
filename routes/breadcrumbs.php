@@ -6,6 +6,7 @@ use App\Entity\Adverts\Category;
 use App\Entity\Banner\Banner;
 use App\Entity\Page;
 use App\Entity\Regions;
+use App\Entity\Ticket\Ticket;
 use App\Entity\User\User;
 use App\Http\Router\AdvertsPath;
 use App\Http\Router\PagePath;
@@ -162,6 +163,21 @@ Breadcrumbs::register('cabinet.banners.create.region', function (BreadcrumbsGene
 Breadcrumbs::register('cabinet.banners.create.banner', function (BreadcrumbsGenerator $crumbs, Category $category, Regions $region = null) {
     $crumbs->parent('cabinet.banners.create.region', $category, $region);
     $crumbs->push($region ? $region->name : 'All', route('cabinet.banners.create.banner', [$category, $region]));
+});
+
+
+// Кабинет Tickets
+Breadcrumbs::register('cabinet.tickets.index', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('cabinet.home');
+    $crumbs->push('Tickets', route('cabinet.tickets.index'));
+});
+Breadcrumbs::register('cabinet.tickets.create', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('cabinet.tickets.index');
+    $crumbs->push('Create', route('cabinet.tickets.create'));
+});
+Breadcrumbs::register('cabinet.tickets.show', function (BreadcrumbsGenerator $crumbs, Ticket $ticket) {
+    $crumbs->parent('cabinet.tickets.index');
+    $crumbs->push($ticket->subject, route('cabinet.tickets.show', $ticket));
 });
 
 
@@ -329,5 +345,20 @@ Breadcrumbs::register('admin.pages.show', function (BreadcrumbsGenerator $crumbs
 Breadcrumbs::register('admin.pages.edit', function (BreadcrumbsGenerator $crumbs, Page $page) {
     $crumbs->parent('admin.pages.show', $page);
     $crumbs->push('Edit', route('admin.pages.edit', $page));
+});
+
+
+// Админка Tickets
+Breadcrumbs::register('admin.tickets.index', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('admin.home');
+    $crumbs->push('Tickets', route('admin.tickets.index'));
+});
+Breadcrumbs::register('admin.tickets.show', function (BreadcrumbsGenerator $crumbs, Ticket $ticket) {
+    $crumbs->parent('admin.tickets.index');
+    $crumbs->push($ticket->subject, route('admin.tickets.show', $ticket));
+});
+Breadcrumbs::register('admin.tickets.edit', function (BreadcrumbsGenerator $crumbs, Ticket $ticket) {
+    $crumbs->parent('admin.tickets.show', $ticket);
+    $crumbs->push('Edit', route('admin.tickets.edit', $ticket));
 });
 

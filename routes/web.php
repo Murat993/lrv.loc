@@ -109,6 +109,9 @@ Route::group([
         Route::post('/{banner}/order', 'BannerController@order')->name('order');
         Route::delete('/{banner}/destroy', 'BannerController@destroy')->name('destroy');
     });
+
+    Route::resource('tickets', 'TicketController')->only(['index', 'show', 'create', 'store', 'destroy']);
+    Route::post('tickets/{ticket}/message', 'TicketController@message')->name('tickets.message');
 });
 
 
@@ -162,16 +165,28 @@ Route::group([
                 });
         });
 
-    Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
-        Route::get('/', 'BannerController@index')->name('index');
-        Route::get('/{banner}/show', 'BannerController@show')->name('show');
-        Route::get('/{banner}/edit', 'BannerController@editForm')->name('edit');
-        Route::put('/{banner}/edit', 'BannerController@edit');
-        Route::post('/{banner}/moderate', 'BannerController@moderate')->name('moderate');
-        Route::get('/{banner}/reject', 'BannerController@rejectForm')->name('reject');
-        Route::post('/{banner}/reject', 'BannerController@reject');
-        Route::post('/{banner}/pay', 'BannerController@pay')->name('pay');
-        Route::delete('/{banner}/destroy', 'BannerController@destroy')->name('destroy');
+        Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
+            Route::get('/', 'BannerController@index')->name('index');
+            Route::get('/{banner}/show', 'BannerController@show')->name('show');
+            Route::get('/{banner}/edit', 'BannerController@editForm')->name('edit');
+            Route::put('/{banner}/edit', 'BannerController@edit');
+            Route::post('/{banner}/moderate', 'BannerController@moderate')->name('moderate');
+            Route::get('/{banner}/reject', 'BannerController@rejectForm')->name('reject');
+            Route::post('/{banner}/reject', 'BannerController@reject');
+            Route::post('/{banner}/pay', 'BannerController@pay')->name('pay');
+            Route::delete('/{banner}/destroy', 'BannerController@destroy')->name('destroy');
+            });
+
+        Route::group(['prefix' => 'tickets', 'as' => 'tickets.'], function () {
+            Route::get('/', 'TicketController@index')->name('index');
+            Route::get('/{ticket}/show', 'TicketController@show')->name('show');
+            Route::get('/{ticket}/edit', 'TicketController@editForm')->name('edit');
+            Route::put('/{ticket}/edit', 'TicketController@edit');
+            Route::post('{ticket}/message', 'TicketController@message')->name('message');
+            Route::post('/{ticket}/close', 'TicketController@close')->name('close');
+            Route::post('/{ticket}/approve', 'TicketController@approve')->name('approve');
+            Route::post('/{ticket}/reopen', 'TicketController@reopen')->name('reopen');
+            Route::delete('/{ticket}/destroy', 'TicketController@destroy')->name('destroy');
         });
 
     });
