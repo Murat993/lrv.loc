@@ -163,6 +163,7 @@ return [
         App\Providers\CacheServiceProvider::class,
         App\Providers\SearchServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
+        App\Providers\ComposerServiceProvider::class,
 
     ],
 
