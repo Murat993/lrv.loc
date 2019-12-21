@@ -118,6 +118,8 @@ Route::group([
         'prefix' => 'admin',
         'as' => 'admin.',
     ], function () {
+        Route::post('/ajax/upload/image', 'UploadController@image')->name('ajax.upload.image');
+
         Route::get('/', 'HomeController@index')->name('home');
 
         Route::resource('users', 'UsersController');

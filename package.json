@@ -18,5 +18,8 @@
         "lodash": "^4.17.4",
         "popper.js": "^1.12",
         "font-awesome": "^4.7.0"
+    },
+    "dependencies": {
+        "summernote": "^0.8.12"
     }
 }
