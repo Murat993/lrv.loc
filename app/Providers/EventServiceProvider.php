@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Event;
+use App\Events\Advert\ModerationPassed;
+use App\Listeners\Advert\ModerationPassedListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
@@ -14,8 +15,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\Event' => [
-            'App\Listeners\EventListener',
+        ModerationPassed::class => [
+            ModerationPassedListener::class,
         ],
         SocialiteWasCalled::class => [
             'SocialiteProviders\VKontakte\VKontakteExtendSocialite@handle',

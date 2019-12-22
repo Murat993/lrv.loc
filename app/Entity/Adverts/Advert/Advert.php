@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $published_at
  * @property Carbon $expires_at
  * @property Photo[] $photos
+ * @property User $user
  * @method Advert forUser(User $user)
  * @method Advert favoredByUser(User $user)
  * @method Advert active()
