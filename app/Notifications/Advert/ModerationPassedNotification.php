@@ -23,10 +23,10 @@ class ModerationPassedNotification extends Notification implements ShouldQueue
 
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', SmsChannel::class];
     }
 
-    public function toMail($notifiable)
+    public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
             ->subject('Moderation is passed')
@@ -36,7 +36,7 @@ class ModerationPassedNotification extends Notification implements ShouldQueue
             ->line('Thank you for using our application!');
     }
 
-    public function toSms($notifiable = null): string
+    public function toSms(): string
     {
         return 'Your advert successfully passed a moderation.';
     }
