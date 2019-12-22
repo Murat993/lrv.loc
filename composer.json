@@ -18,7 +18,8 @@
         "socialiteproviders/vkontakte": "^4.0",
         "laravel/passport": "^5.0",
         "zircote/swagger-php": "^2.0",
-        "mews/purifier": "^2.1"
+        "mews/purifier": "^2.1",
+        "laravel/horizon": "^1.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
